@@ -1,0 +1,23 @@
+{
+  "name": "abyssal",
+  "devDependencies": {
+    "@types/node": "^9.4.7",
+    "commitizen": "^2.9.6",
+    "cz-conventional-changelog": "^2.1.0",
+    "lerna": "^2.9.0"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "private": true,
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "commit": "git-cz",
+    "lerna:nopub": "lerna publish --skip-npm --skip-git"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
+}
