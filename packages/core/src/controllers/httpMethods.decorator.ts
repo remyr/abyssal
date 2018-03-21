@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { NextFunction, Request, Response } from "express";
 import { ROUTE_DEF } from "../reflection-types";
 
