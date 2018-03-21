@@ -8,13 +8,15 @@
   "devDependencies": {
     "@types/body-parser": "^1.16.8",
     "@types/express": "^4.11.1",
+    "@types/url-join": "^0.8.2",
     "typescript": "^2.7.2"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
     "express": "^4.16.3",
     "injection-js": "^2.2.1",
-    "reflect-metadata": "^0.1.12"
+    "reflect-metadata": "^0.1.12",
+    "url-join": "^4.0.0"
   },
   "scripts": {
     "compile": "npm run clean && tsc -p .",

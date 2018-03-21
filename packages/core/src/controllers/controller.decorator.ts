@@ -1,5 +1,7 @@
 import "reflect-metadata";
-import { CONTROLLER_ROUTES, ROUTES_PREFIX } from "../reflection-types";
+import * as urlJoin from "url-join";
+
+import { CONTROLLER_ROUTES, ROUTE_DEF } from "../reflection-types";
 
 export interface IControllerDecoratorOptions {
   path: string;
@@ -14,14 +16,14 @@ export interface IRouteDef {
 
 export function Controller(options: IControllerDecoratorOptions) {
   return (target: any) => {
-    const $routes: IRouteDef[] = Object.getOwnPropertyNames(target.prototype)
-      .filter(prop => prop.indexOf(ROUTES_PREFIX) === 0)
-      .map(prop => {
-        const { method, path, middlewares } = target.prototype[prop];
-        const url = `${options.path}${path}`;
-        const fnName = prop.substring(ROUTES_PREFIX.length);
-        return { method, url, fnName, middlewares };
-      });
-    Reflect.defineMetadata(CONTROLLER_ROUTES, $routes, target);
+    const routeDef: IRouteDef[] = Reflect.getMetadata(ROUTE_DEF, target).map(
+      (route: any) => {
+        const { method, path, middlewares, fnName } = route;
+        const url = urlJoin(options.path, path);
+        return { method, middlewares, fnName, url };
+      },
+    );
+
+    Reflect.defineMetadata(CONTROLLER_ROUTES, routeDef, target);
   };
 }
