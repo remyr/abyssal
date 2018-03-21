@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noEmitOnError": true,
+    "noImplicitAny": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "rootDir": ".",
+    "paths": {
+      "*": ["src/types/*"]
+    },
+    "sourceRoot": "src",
+    "outDir": "dist",
+    "lib": ["es6", "dom", "esnext.asynciterable"]
+    // "skipLibCheck": true
+  },
+  "typeRoots": ["node_module/@types"],
+  "include": ["src", "index.ts"],
+  "exclude": ["dist", "node_modules"]
+}
