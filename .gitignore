@@ -4,3 +4,4 @@ packages/*/dist
 lerna-debug.log
 *.log
 packages/**/*.log
+.history
