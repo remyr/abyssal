@@ -24,8 +24,12 @@ export interface Application {
   plugins: any[];
 }
 
+const defaultApplicationOptions: ApplicationOptions = {
+  port: parseInt(process.env.PORT, 10) || 8000,
+};
+
 export class Application {
-  constructor(options: ApplicationOptions = { port: 8000 }) {
+  constructor(options: ApplicationOptions = defaultApplicationOptions) {
     this.options = options;
     // Setup application
     this.app = express();
