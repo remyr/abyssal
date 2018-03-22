@@ -7,11 +7,16 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@types/express": "^4.11.1",
     "typescript": "^2.7.2"
   },
   "scripts": {
     "compile": "npm run clean && tsc -p .",
     "watch": "tsc -w -p .",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "start": "tsc --watch | nodemon ./dist/index.js --watch dist"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.2"
   }
 }
