@@ -1,10 +1,16 @@
 import "reflect-metadata";
 import * as urlJoin from "url-join";
 
-import { CONTROLLER_ROUTES, ROUTE_DEF } from "../reflection-types";
+import { AbyssalGuards } from "../guards";
+import {
+  CONTROLLER_ROUTES,
+  ROUTE_DEF,
+  CONTROLLER_GUARDS,
+} from "../reflection-types";
 
 export interface IControllerDecoratorOptions {
   path: string;
+  guards?: any[];
 }
 
 export interface IRouteDef {
@@ -25,5 +31,6 @@ export function Controller(options: IControllerDecoratorOptions) {
     );
 
     Reflect.defineMetadata(CONTROLLER_ROUTES, routeDef, target);
+    Reflect.defineMetadata(CONTROLLER_GUARDS, options.guards || [], target);
   };
 }

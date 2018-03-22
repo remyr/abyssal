@@ -10,7 +10,9 @@ import {
   APP_SERVICES,
   APP_PLUGINS,
   CONTROLLER_ROUTES,
+  CONTROLLER_GUARDS,
 } from "../reflection-types";
+import { AbyssalGuards } from "../guards";
 
 export interface ApplicationOptions {
   port: number;
@@ -33,7 +35,6 @@ export class Application {
     this.options = options;
     // Setup application
     this.app = express();
-    this.registerAppMiddleware(this.app);
     // Get all controllers registred in application
     this.controllers =
       (Reflect.getMetadata(APP_CONTROLLERS, this) as any[]) || [];
@@ -44,6 +45,7 @@ export class Application {
   }
 
   public start() {
+    this.registerMiddlewares(this.app);
     this.registerPlugins();
     this.registerControllers();
     this.app.listen(this.options.port, () =>
@@ -52,7 +54,7 @@ export class Application {
     );
   }
 
-  public registerAppMiddleware(app: express.Express) {
+  public registerMiddlewares(app: express.Express) {
     app.use(bodyParser.json());
   }
 
@@ -61,38 +63,83 @@ export class Application {
       // Create a new router for this controller
       const router: express.Router & { [key: string]: any } = express.Router();
 
+      // Setup guard for router attached to a controller
+      const guards = Reflect.getMetadata(CONTROLLER_GUARDS, controller);
+      this.setupGuards(guards, router);
+
       // Get routes defined in controller
       const routes: IRouteDef[] = Reflect.getMetadata(
         CONTROLLER_ROUTES,
         controller,
       );
-
-      // Inject service to controller
-      const injector = ReflectiveInjector.resolveAndCreate([
-        controller,
-        ...this.services,
-      ]);
-
-      // Get instance of controller with service injected
-      const injectedController = injector.get(controller);
-
-      // Register each route to the router
-      routes.forEach(({ method, url, fnName, middlewares }: IRouteDef) => {
-        router[method](
-          url,
-          ...middlewares,
-          (
-            req: express.Request,
-            res: express.Response,
-            next: express.NextFunction,
-          ) => {
-            injectedController[fnName](req, res, next);
-          },
-        );
-      });
+      // Instantiate controller & inject services
+      const injectedController = this.instantiateController(controller);
+      this.setupRoutes(routes, injectedController, router);
 
       // Attach router to application
       this.app.use(router);
+    });
+  }
+
+  private validateGuard(guard: any): void {
+    const isValidGuard = (guard as AbyssalGuards).isAuthorize !== undefined;
+    if (!isValidGuard) {
+      throw new Error(`Invalid guard`);
+    }
+  }
+
+  private setupGuards(guards: any[], router: express.Router): void {
+    const guardsMiddleware = guards.map(guard => {
+      const inj = ReflectiveInjector.resolveAndCreate([
+        guard,
+        ...this.services,
+      ]);
+      const injectedGuard = inj.get(guard) as AbyssalGuards;
+
+      this.validateGuard(injectedGuard);
+
+      return (
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction,
+      ) => {
+        if (!injectedGuard.isAuthorize(req)) {
+          return res.status(403).json({ error: "403 Forbidden" });
+        }
+        next();
+      };
+    });
+
+    router.use(...guardsMiddleware);
+  }
+
+  private instantiateController(controller: any): void {
+    const injector = ReflectiveInjector.resolveAndCreate([
+      controller,
+      ...this.services,
+    ]);
+
+    // Get instance of controller with service injected
+    return injector.get(controller);
+  }
+
+  private setupRoutes(
+    routes: IRouteDef[],
+    controller: any,
+    router: express.Router & { [key: string]: any },
+  ): void {
+    routes.forEach(({ method, url, fnName, middlewares }: IRouteDef) => {
+      router[method](
+        url,
+        ...middlewares,
+        (
+          req: express.Request,
+          res: express.Response,
+          next: express.NextFunction,
+        ) => {
+          controller[fnName](req, res, next);
+        },
+      );
     });
   }
 
