@@ -3,8 +3,6 @@ import * as express from "express";
 import { Injectable, ReflectiveInjector } from "injection-js";
 import * as bodyParser from "body-parser";
 
-import { AbyssalPlugin } from "../plugin";
-import { IRouteDef } from "../controllers";
 import {
   APP_CONTROLLERS,
   APP_SERVICES,
@@ -12,6 +10,8 @@ import {
   CONTROLLER_ROUTES,
   CONTROLLER_GUARDS,
 } from "../reflection-types";
+import { IRouteDef } from "../controllers";
+import { AbyssalPlugin } from "../plugin";
 import { AbyssalGuards } from "../guards";
 
 export interface ApplicationOptions {
@@ -73,7 +73,7 @@ export class Application {
         controller,
       );
       // Instantiate controller & inject services
-      const injectedController = this.instantiateController(controller);
+      const injectedController = this.instantiateInjectable(controller);
       this.setupRoutes(routes, injectedController, router);
 
       // Attach router to application
@@ -81,21 +81,16 @@ export class Application {
     });
   }
 
-  private validateGuard(guard: any): void {
-    const isValidGuard = (guard as AbyssalGuards).isAuthorize !== undefined;
-    if (!isValidGuard) {
-      throw new Error(`Invalid guard`);
-    }
-  }
-
-  private setupGuards(guards: any[], router: express.Router): void {
-    const guardsMiddleware = guards.map(guard => {
-      const inj = ReflectiveInjector.resolveAndCreate([
-        guard,
-        ...this.services,
-      ]);
-      const injectedGuard = inj.get(guard) as AbyssalGuards;
-
+  /**
+   * Method to construct express middleware from an array of guards
+   * The middleware test the return of isAuthorize function from guard
+   * If return false, return a 403 Forbidden response
+   * If return true, pass to the next middleware
+   * @param {Array} guards Array of guards
+   */
+  private constructGuardsMiddlewares(guards: any[]) {
+    return guards.map(guard => {
+      const injectedGuard = this.instantiateInjectable<AbyssalGuards>(guard);
       this.validateGuard(injectedGuard);
 
       return (
@@ -109,18 +104,43 @@ export class Application {
         next();
       };
     });
-
-    router.use(...guardsMiddleware);
   }
 
-  private instantiateController(controller: any): void {
+  /**
+   * Method to validate guard.
+   * A guard must implement a isAuthorize function, if not, throw an Error
+   * @param guard Guard to validate
+   */
+  private validateGuard(guard: any): void {
+    const isValidGuard = (guard as AbyssalGuards).isAuthorize !== undefined;
+    if (!isValidGuard) {
+      throw new Error(`Invalid guard`);
+    }
+  }
+
+  /**
+   * Setup guard from controller to the router used by this controller
+   * @param {Array} guards Array of guards
+   * @param router An express router
+   */
+  private setupGuards(guards: any[], router: express.Router): void {
+    const guardsMiddleware = this.constructGuardsMiddlewares(guards);
+    if (guardsMiddleware.length > 0) {
+      router.use(...guardsMiddleware);
+    }
+  }
+
+  /**
+   * Method to instantiate a class and inject services registred in the application
+   * @param injectable Class to instantiate
+   */
+  private instantiateInjectable<T>(injectable: any): T {
     const injector = ReflectiveInjector.resolveAndCreate([
-      controller,
+      injectable,
       ...this.services,
     ]);
 
-    // Get instance of controller with service injected
-    return injector.get(controller);
+    return injector.get(injectable) as T;
   }
 
   private setupRoutes(
@@ -128,19 +148,24 @@ export class Application {
     controller: any,
     router: express.Router & { [key: string]: any },
   ): void {
-    routes.forEach(({ method, url, fnName, middlewares }: IRouteDef) => {
-      router[method](
-        url,
-        ...middlewares,
-        (
-          req: express.Request,
-          res: express.Response,
-          next: express.NextFunction,
-        ) => {
-          controller[fnName](req, res, next);
-        },
-      );
-    });
+    routes.forEach(
+      ({ method, url, fnName, middlewares, guards }: IRouteDef) => {
+        const guardsMiddlewares = this.constructGuardsMiddlewares(guards);
+
+        router[method](
+          url,
+          ...guardsMiddlewares,
+          ...middlewares,
+          (
+            req: express.Request,
+            res: express.Response,
+            next: express.NextFunction,
+          ) => {
+            controller[fnName](req, res, next);
+          },
+        );
+      },
+    );
   }
 
   private registerPlugins(): void {

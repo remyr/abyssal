@@ -18,15 +18,16 @@ export interface IRouteDef {
   url: string;
   fnName: string;
   middlewares: any[];
+  guards: any[];
 }
 
 export function Controller(options: IControllerDecoratorOptions) {
   return (target: any) => {
     const routeDef: IRouteDef[] = Reflect.getMetadata(ROUTE_DEF, target).map(
       (route: any) => {
-        const { method, path, middlewares, fnName } = route;
+        const { method, path, middlewares, fnName, guards } = route;
         const url = urlJoin(options.path, path);
-        return { method, middlewares, fnName, url };
+        return { method, middlewares, fnName, url, guards };
       },
     );
 
