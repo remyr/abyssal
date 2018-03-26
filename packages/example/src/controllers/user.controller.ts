@@ -14,6 +14,7 @@ export class UserController {
     guards: [AdminGuard],
   })
   public retrieve(req: Request, res: Response) {
-    return res.json({ users: true });
+    const isAdmin = this.service.isAdmin();
+    return res.json({ isAdmin });
   }
 }
