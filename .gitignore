@@ -5,3 +5,4 @@ lerna-debug.log
 *.log
 packages/**/*.log
 .history
+yarn.lock
