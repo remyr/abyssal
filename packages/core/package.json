@@ -1,6 +1,6 @@
 {
   "name": "@abyssal/core",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Core component of abyssal",
   "main": "dist/index.js",
   "author": "Remy Rivals <rivals.remy@gmail.com>",
