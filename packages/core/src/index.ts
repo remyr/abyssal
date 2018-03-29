@@ -3,3 +3,4 @@ export * from "./controllers";
 export * from "./application";
 export * from "./plugin";
 export * from "./guards";
+export * from "./interfaces";

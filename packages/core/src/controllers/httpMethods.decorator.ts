@@ -1,17 +1,11 @@
 import "reflect-metadata";
-import { NextFunction, Request, Response } from "express";
 import { ROUTE_DEF } from "../reflection-types";
-import { IRouteDef } from ".";
+import { IRouteDef } from "./controller.decorator";
+import { Middleware } from "../interfaces";
 
 export interface ICls extends Object {
   [key: string]: any;
 }
-
-export type Middleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => void;
 
 export interface HttpMethodOptions {
   middlewares?: Middleware[];

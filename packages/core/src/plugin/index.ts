@@ -1,5 +1,5 @@
-import { Express } from "express";
+import { Server } from "../interfaces";
 
 export interface AbyssalPlugin {
-  init(app: Express): any;
+  init(app: Server): any;
 }
