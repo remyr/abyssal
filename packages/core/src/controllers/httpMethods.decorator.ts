@@ -1,42 +1,84 @@
-import { NextFunction, Request, Response } from "express";
-import { ROUTES_PREFIX } from "../reflection-types";
+import "reflect-metadata";
+import { ROUTE_DEF } from "../reflection-types";
+import { IRouteDef } from "./controller.decorator";
+import { Middleware } from "../interfaces";
 
 export interface ICls extends Object {
   [key: string]: any;
 }
 
-export type Middleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => void;
+export interface HttpMethodOptions {
+  middlewares?: Middleware[];
+  guards?: any[];
+}
 
-export function Get(path: string = "", middlewares: Middleware[] = []) {
+export function Get(path: string = "", options?: HttpMethodOptions) {
   return (target: ICls, name: string) => {
-    target[`${ROUTES_PREFIX}${name}`] = { method: "get", path, middlewares };
+    const { middlewares = [], guards = [] } = options;
+    const routeDef: IRouteDef[] =
+      Reflect.getMetadata(ROUTE_DEF, target.constructor) || [];
+
+    Reflect.defineMetadata(
+      ROUTE_DEF,
+      [...routeDef, { method: "get", path, middlewares, fnName: name, guards }],
+      target.constructor,
+    );
   };
 }
 
-export function Post(path: string = "", middlewares: Middleware[] = []) {
+export function Post(path: string = "", options?: HttpMethodOptions) {
   return (target: ICls, name: string) => {
-    target[`${ROUTES_PREFIX}${name}`] = { method: "post", path, middlewares };
+    const { middlewares = [], guards = [] } = options;
+    const routeDef = Reflect.getMetadata(ROUTE_DEF, target.constructor) || [];
+    Reflect.defineMetadata(
+      ROUTE_DEF,
+      [
+        ...routeDef,
+        { method: "post", path, middlewares, fnName: name, guards },
+      ],
+      target.constructor,
+    );
   };
 }
 
-export function Put(path: string = "", middlewares: Middleware[] = []) {
+export function Put(path: string = "", options?: HttpMethodOptions) {
   return (target: ICls, name: string) => {
-    target[`${ROUTES_PREFIX}${name}`] = { method: "put", path, middlewares };
+    const { middlewares = [], guards = [] } = options;
+    const routeDef = Reflect.getMetadata(ROUTE_DEF, target.constructor) || [];
+    Reflect.defineMetadata(
+      ROUTE_DEF,
+      [...routeDef, { method: "put", path, middlewares, fnName: name, guards }],
+      target.constructor,
+    );
   };
 }
 
-export function Patch(path: string = "", middlewares: Middleware[] = []) {
+export function Patch(path: string = "", options?: HttpMethodOptions) {
   return (target: ICls, name: string) => {
-    target[`${ROUTES_PREFIX}${name}`] = { method: "patch", path, middlewares };
+    const { middlewares = [], guards = [] } = options;
+    const routeDef = Reflect.getMetadata(ROUTE_DEF, target.constructor) || [];
+    Reflect.defineMetadata(
+      ROUTE_DEF,
+      [
+        ...routeDef,
+        { method: "patch", path, middlewares, fnName: name, guards },
+      ],
+      target.constructor,
+    );
   };
 }
 
-export function Delete(path: string = "", middlewares: Middleware[] = []) {
+export function Delete(path: string = "", options?: HttpMethodOptions) {
   return (target: ICls, name: string) => {
-    target[`${ROUTES_PREFIX}${name}`] = { method: "delete", path, middlewares };
+    const { middlewares = [], guards = [] } = options;
+    const routeDef = Reflect.getMetadata(ROUTE_DEF, target.constructor) || [];
+    Reflect.defineMetadata(
+      ROUTE_DEF,
+      [
+        ...routeDef,
+        { method: "delete", path, middlewares, fnName: name, guards },
+      ],
+      target.constructor,
+    );
   };
 }

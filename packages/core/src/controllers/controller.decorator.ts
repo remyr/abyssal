@@ -1,8 +1,16 @@
 import "reflect-metadata";
-import { CONTROLLER_ROUTES, ROUTES_PREFIX } from "../reflection-types";
+import * as urlJoin from "url-join";
+
+import { AbyssalGuards } from "../guards";
+import {
+  CONTROLLER_ROUTES,
+  ROUTE_DEF,
+  CONTROLLER_GUARDS,
+} from "../reflection-types";
 
 export interface IControllerDecoratorOptions {
   path: string;
+  guards?: any[];
 }
 
 export interface IRouteDef {
@@ -10,18 +18,20 @@ export interface IRouteDef {
   url: string;
   fnName: string;
   middlewares: any[];
+  guards: any[];
 }
 
 export function Controller(options: IControllerDecoratorOptions) {
   return (target: any) => {
-    const $routes: IRouteDef[] = Object.getOwnPropertyNames(target.prototype)
-      .filter(prop => prop.indexOf(ROUTES_PREFIX) === 0)
-      .map(prop => {
-        const { method, path, middlewares } = target.prototype[prop];
-        const url = `${options.path}${path}`;
-        const fnName = prop.substring(ROUTES_PREFIX.length);
-        return { method, url, fnName, middlewares };
-      });
-    Reflect.defineMetadata(CONTROLLER_ROUTES, $routes, target);
+    const routeDef: IRouteDef[] = Reflect.getMetadata(ROUTE_DEF, target).map(
+      (route: any) => {
+        const { method, path, middlewares, fnName, guards } = route;
+        const url = urlJoin(options.path, path);
+        return { method, middlewares, fnName, url, guards };
+      },
+    );
+
+    Reflect.defineMetadata(CONTROLLER_ROUTES, routeDef, target);
+    Reflect.defineMetadata(CONTROLLER_GUARDS, options.guards || [], target);
   };
 }

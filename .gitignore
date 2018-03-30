@@ -1,3 +1,8 @@
 node_modules
 packages/*/node_modules
 packages/*/dist
+lerna-debug.log
+*.log
+packages/**/*.log
+.history
+yarn.lock
