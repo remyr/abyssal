@@ -1,5 +1,5 @@
 {
-  "name": "@abyssal/plugin-graphql",
+  "name": "@abyssaljs/plugin-graphql",
   "version": "0.1.0",
   "description": "Core component of abyssal",
   "main": "dist/index.js",
@@ -23,5 +23,12 @@
     "compile": "npm run clean && tsc -p .",
     "watch": "tsc -w -p .",
     "clean": "rm -rf dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/remyr/abyssal"
+  },
+  "bugs": {
+    "url": "https://github.com/remyr/abyssal/issues"
   }
 }
