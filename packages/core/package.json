@@ -1,5 +1,5 @@
 {
-  "name": "@abyssal/core",
+  "name": "@abyssaljs/core",
   "version": "0.1.0",
   "description": "Core component of abyssal",
   "main": "dist/index.js",
