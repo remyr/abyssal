@@ -1,4 +1,4 @@
-import { Request } from "@abyssal/core";
+import { Request } from "@abyssaljs/core";
 
 export interface IGraphqlResolver {
   Query?: object;
