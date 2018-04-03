@@ -1,4 +1,4 @@
-import { Controller, Get } from "@abyssal/core";
+import { Controller, Get } from "@abyssaljs/core";
 import { Request } from "express";
 import { Response } from "express-serve-static-core";
 

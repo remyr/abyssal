@@ -1,4 +1,4 @@
-import { AbyssalGuards } from "@abyssal/core";
+import { AbyssalGuards } from "@abyssaljs/core";
 import * as e from "express";
 
 export class AdminGuard implements AbyssalGuards {

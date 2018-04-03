@@ -1,4 +1,4 @@
-import { App, Application, ApplicationOptions } from "@abyssal/core";
+import { App, Application, ApplicationOptions } from "@abyssaljs/core";
 
 import { Plugins } from "./plugins";
 import { UserController } from "./controllers/user.controller";
