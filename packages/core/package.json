@@ -1,6 +1,6 @@
 {
   "name": "@abyssaljs/core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Core component of abyssal",
   "main": "dist/index.js",
   "author": "Remy Rivals <rivals.remy@gmail.com>",
@@ -20,6 +20,7 @@
   },
   "scripts": {
     "compile": "npm run clean && tsc -p .",
+    "prepublish": "npm run compile",
     "watch": "tsc -w -p .",
     "clean": "rm -rf dist"
   },
