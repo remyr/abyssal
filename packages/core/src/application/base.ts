@@ -16,6 +16,7 @@ import { AbyssalGuards } from "../guards";
 
 export interface ApplicationOptions {
   port: number;
+  networkInterface?: string;
 }
 
 export interface Application {
@@ -28,6 +29,7 @@ export interface Application {
 
 const defaultApplicationOptions: ApplicationOptions = {
   port: parseInt(process.env.PORT, 10) || 8000,
+  networkInterface: "127.0.0.1",
 };
 
 export class Application {
@@ -48,9 +50,13 @@ export class Application {
     this.registerMiddlewares(this.app);
     this.registerPlugins();
     this.registerControllers();
-    this.app.listen(this.options.port, () =>
+    this.app.listen(this.options.port, this.options.networkInterface, () =>
       /* tslint:disable-next-line */
-      console.log(`> Server running on http://localhost:${this.options.port}`),
+      console.log(
+        `> Server running on http://${this.options.networkInterface}:${
+          this.options.port
+        }`,
+      ),
     );
   }
 
