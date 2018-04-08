@@ -15,5 +15,8 @@ class ExampleApplication extends Application {
   }
 }
 
-const application = new ExampleApplication({ port: 8000 });
+const application = new ExampleApplication({
+  port: 1337,
+  networkInterface: "0.0.0.0",
+});
 application.start();
