@@ -1,4 +1,4 @@
-import { AbyssalPlugin, Server, Request } from "@abyssal/core";
+import { AbyssalPlugin, Server, Request } from "@abyssaljs/core";
 import { makeExecutableSchema, mergeSchemas } from "graphql-tools";
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
 import * as merge from "deepmerge";

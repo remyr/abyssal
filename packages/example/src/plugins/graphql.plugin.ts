@@ -1,4 +1,4 @@
-import { GraphqlPlugin } from "@abyssal/plugin-graphql";
+import { GraphqlPlugin } from "@abyssaljs/plugin-graphql";
 
 import { PostResolver } from "../resolvers";
 
