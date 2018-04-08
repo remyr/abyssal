@@ -1,0 +1,18 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+<a name="0.2.0"></a>
+# 0.2.0 (2018-04-08)
+
+
+### Bug Fixes
+
+* **graphql:** fix dependencies issues (types) ([162a786](https://github.com/remyr/abyssal/commit/162a786))
+* **graphql:** fix scope name for abyssaljs dependencies ([314b1cb](https://github.com/remyr/abyssal/commit/314b1cb))
+
+
+### Features
+
+* **graphql:** start implementing graphql plugin ([68facd3](https://github.com/remyr/abyssal/commit/68facd3))

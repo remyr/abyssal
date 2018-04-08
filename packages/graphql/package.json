@@ -1,6 +1,6 @@
 {
   "name": "@abyssaljs/plugin-graphql",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Graphql plugin for abyssaljs framework",
   "main": "dist/index.js",
   "author": "Remy Rivals <rivals.remy@gmail.com>",
@@ -9,7 +9,7 @@
     "typescript": "^2.7.2"
   },
   "dependencies": {
-    "@abyssaljs/core": "^0.1.0",
+    "@abyssaljs/core": "^0.2.0",
     "@types/deepmerge": "^2.1.0",
     "@types/globby": "^6.1.0",
     "@types/graphql": "^0.12.7",
