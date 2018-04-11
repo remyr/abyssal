@@ -21,7 +21,7 @@
   },
   "scripts": {
     "compile": "npm run clean && tsc -p .",
-    "prepublish": "npm run compile",
+    "prepublishOnly": "npm run compile",
     "watch": "tsc -w -p .",
     "clean": "rm -rf dist"
   },
