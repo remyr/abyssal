@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+<a name="0.3.0"></a>
+# [0.3.0](https://github.com/remyr/abyssal/compare/@abyssaljs/plugin-graphql@0.2.0...@abyssaljs/plugin-graphql@0.3.0) (2018-04-11)
+
+
+### Features
+
+* add formatError function to plugin options ([2f0f5b8](https://github.com/remyr/abyssal/commit/2f0f5b8))
+
+
+
+
 <a name="0.2.0"></a>
 # 0.2.0 (2018-04-08)
 
