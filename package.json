@@ -13,6 +13,7 @@
   "workspaces": ["packages/*"],
   "scripts": {
     "commit": "git-cz",
+    "lerna:publish": "lerna run compile && lerna publish",
     "lerna:nopub": "lerna publish --skip-npm --skip-git"
   },
   "config": {
