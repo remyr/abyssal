@@ -16,6 +16,9 @@ export class GraphqlPlugin implements AbyssalPlugin {
       useGraphiql: false,
       resolvers: [],
       context: null,
+      formatError: (err: { [key: string]: any }) => {
+        return { message: err.message };
+      },
     },
   ) {
     if (!options.schemaPath) {
@@ -41,9 +44,7 @@ export class GraphqlPlugin implements AbyssalPlugin {
           typeof this.options.context === "function"
             ? this.options.context(req)
             : this.options.context || {},
-        formatError: (err: { [key: string]: any }) => {
-          return { message: err.message };
-        },
+        formatError: this.options.formatError,
       })),
     );
 
