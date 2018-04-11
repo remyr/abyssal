@@ -12,4 +12,5 @@ export interface IGraphQLPluginOptions {
   useGraphiql?: boolean;
   schemaPath?: string;
   context?: (req: Request) => object | object;
+  formatError?: any;
 }
