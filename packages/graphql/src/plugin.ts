@@ -6,6 +6,7 @@ import * as globby from "globby";
 import * as fs from "fs";
 import * as path from "path";
 
+import { mergeTypes } from "./merge-schemas";
 import { IGraphQLPluginOptions } from "./interfaces";
 
 export class GraphqlPlugin implements AbyssalPlugin {
@@ -29,12 +30,11 @@ export class GraphqlPlugin implements AbyssalPlugin {
 
   public init(app: Server) {
     const resolvers = merge.all(this.options.resolvers) as any;
-    const typeDefs = this.getSchemas(this.options.schemaPath);
-
-    const schema = mergeSchemas({
-      schemas: typeDefs,
-      resolvers,
+    const typeDefs = mergeTypes(this.getSchemas(this.options.schemaPath), {
+      all: true,
     });
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers });
 
     app.use(
       "/graphql",
