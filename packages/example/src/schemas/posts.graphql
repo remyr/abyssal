@@ -17,7 +17,7 @@ type Post {
 
 # the schema allows the following query:
 type Query {
-  posts: [Post]
+  # posts: [Post]
   author(id: Int!): Author
   ping: String
 }
