@@ -10,7 +10,7 @@
     "declaration": true,
     "emitDecoratorMetadata": true,
     "baseUrl": ".",
-    "rootDir": ".",
+    "rootDir": "src",
     "paths": {
       "*": ["src/types/*"]
     },
@@ -20,6 +20,7 @@
     // "skipLibCheck": true
   },
   "typeRoots": ["node_module/@types"],
-  "include": ["src", "index.ts"],
+  // "include": ["src", "index.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["dist", "node_modules"]
 }
