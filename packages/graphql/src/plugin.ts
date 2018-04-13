@@ -1,6 +1,7 @@
 import { AbyssalPlugin, Server, Request } from "@abyssaljs/core";
 import { makeExecutableSchema, mergeSchemas } from "graphql-tools";
 import { graphqlExpress, graphiqlExpress } from "apollo-server-express";
+import { GraphQLSchema } from "graphql";
 import * as merge from "deepmerge";
 import * as globby from "globby";
 import * as fs from "fs";
@@ -29,12 +30,7 @@ export class GraphqlPlugin implements AbyssalPlugin {
   }
 
   public init(app: Server) {
-    const resolvers = merge.all(this.options.resolvers) as any;
-    const typeDefs = mergeTypes(this.getSchemas(this.options.schemaPath), {
-      all: true,
-    });
-
-    const schema = makeExecutableSchema({ typeDefs, resolvers });
+    const schema = this.getExecutableSchemas();
 
     app.use(
       "/graphql",
@@ -51,6 +47,15 @@ export class GraphqlPlugin implements AbyssalPlugin {
     if (this.options.useGraphiql) {
       app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
     }
+  }
+
+  public getExecutableSchemas(): GraphQLSchema {
+    const resolvers = merge.all(this.options.resolvers) as any;
+    const typeDefs = mergeTypes(this.getSchemas(this.options.schemaPath), {
+      all: true,
+    });
+
+    return makeExecutableSchema({ typeDefs, resolvers });
   }
 
   private getSchemas(pattern: string): string[] {
